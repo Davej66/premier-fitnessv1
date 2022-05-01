@@ -39,5 +39,5 @@ if settings.DEBUG:
         path('500/', err_500, name='500'),
         ]
 
-handler404 = 'freelanceMeetup.views.err_404'
-handler500 = 'freelanceMeetup.views.err_500'
+handler404 = 'premierfitness.views.err_404'
+handler500 = 'premierfitness.views.err_500'

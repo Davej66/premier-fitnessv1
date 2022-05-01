@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEVELOPMENT' in os.environ
 
-ALLOWED_HOSTS = ['bc-freelance-meetups.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['djj-premierfitness.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -99,7 +99,7 @@ LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = '/profile/dashboard/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
-ROOT_URLCONF = 'freelanceMeetup.urls'
+ROOT_URLCONF = 'premierfitness.urls'
 
 TEMPLATES = [
     {
@@ -122,7 +122,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'freelanceMeetup.wsgi.application'
+WSGI_APPLICATION = 'premierfitness.wsgi.application'
 
 
 # Database
@@ -195,7 +195,7 @@ if 'USE_AWS' in os.environ:
 
 
     # Bucket Config
-    AWS_STORAGE_BUCKET_NAME = 'bc-freelance-meetups'
+    AWS_STORAGE_BUCKET_NAME = 'djj-premierfitness'
     AWS_S3_REGION_NAME = 'eu-west-2'
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
     AWS_SECRET_ACCESS_KEY_ID = os.environ.get('AWS_SECRET_ACCESS_KEY_ID', '')
@@ -225,7 +225,7 @@ STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET_MS4', '')
 # Email Config
 if 'DEVELOPMENT' in os.environ:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'hi@freelancemeetups.com'
+    DEFAULT_FROM_EMAIL = 'hi@premierfitness.com'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
