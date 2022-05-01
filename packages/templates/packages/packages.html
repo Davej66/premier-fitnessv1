@@ -1,0 +1,172 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block post_CSS %}
+<link rel="stylesheet" href="{% static 'packages/css/packages.css' %}">
+{% endblock %}
+
+{% block head_title %}Select Your Package{% endblock %}
+
+{% block content %}
+<section class="light-page screen-height section-with-padding">
+    <div class="nav-top-padding"></div>
+    <div class="container-fluid w-100 m-auto py-5 px-0 centered-col-large-page">
+        <h1 class="header-underline-after">Select Your Subscription</h1>
+        <div class="col-lg-12 homepage-packages-section">
+            <p class="m-auto w-lg-50 large py-3">Find and join Freelance Meetups in your industry with a subscription
+                that
+                suits your needs.</p>
+            <div class="row package-selection-page d-flex justify-content-between">
+                
+                <!-- Free Package -->
+                <div class="package-card-wrap col-12 col-lg-4">
+                    <div class="card package-card muted p-4">
+                        <h3>Free Account</h3>
+                        <i class="fas fa-social"></i>
+                        <p class="package-cost"><span>£</span>0.00</p>
+                        <span class="small-text">per month</span>
+                        <hr>
+                        <ul class="package-feature-list">
+                            <li><i class="fas fa-check"></i>
+                                <span>Connect with unlimited Freelancers in your industry</span>
+                            </li>
+                            <li><i class="fas fa-check"></i>
+                                <span>Register for 1 free event a month</span>
+                            </li>
+                            <li><i class="fas fa-check"></i>
+                                <span>Community news & updates via monthly newsletter</span>
+                            </li>
+                        </ul>
+                        <div class="btn-wrap flex-column">
+                            <button type="submit" class="package-cta btn 
+                            {% if users_package == 1%}featured primary-btn
+                            {% else %} primary-btn-outline-color
+                            {% endif%}" onclick="select_package(1);">
+                                {% if users_package == 1%}
+                                Your Current Package
+                                {% elif users_package %}
+                                Select this Package
+                                {% else %}
+                                Select This Package
+                                {%endif%}
+                            </button>
+                            {% if sub_change == "upgrade" and users_package == 1 %}
+                            <p class="p-text-underline pt-3 m-auto">Pending Upgrade!</p>
+                            {% elif sub_change == "downgrade" and users_package == 1 %}
+                            <p class="p-text-underline pt-3 m-auto">Pending Downgrade!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Everyday Package -->
+                <div class="package-card-wrap col-12 col-lg-4">
+                    <div class="card package-card muted p-4 featured">
+                        <h3>Everyday Account</h3>
+                        <i class="fas fa-social"></i>
+                        <p class="package-cost"><span>£</span>9.99</p>
+                        <span class="small-text">per month</span>
+                        <hr>
+                        <ul class="package-feature-list">
+                            <li><i class="fas fa-check"></i>
+                                <span>All free tier features</span>
+                            </li>
+                            <li><i class="fas fa-check"></i>
+                                <span>View and connect with Freelancers in other industries</span>
+                            </li>
+                            <li><i class="fas fa-check"></i>
+                                <span>Register for 5 free events a month</span>
+                            </li>
+                        </ul>
+                        <div class="btn-wrap flex-column">
+                            <button type="submit" class="package-cta btn
+                            {% if users_package == 1 or users_package == 3%}primary-btn-outline-color
+                            {% else  %} featured primary-btn
+                            {% endif%}" onclick="select_package(2);">
+                                {% if users_package == 2 %}
+                                Your Current Package
+                                {% elif users_package %}
+                                Upgrade to this Package
+                                {% else %}
+                                Recommended Package
+                                {%endif%}
+                            </button>
+                            {% if sub_change == "upgrade" and users_package == 2 %}
+                            <p class="p-text-underline pt-3 m-auto">Pending Upgrade!</p>
+                            {% elif sub_change == "downgrade" and users_package == 2 %}
+                            <p class="p-text-underline pt-3 m-auto">Pending Downgrade!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pro Package -->
+                <div class="package-card-wrap col-12 col-lg-4">
+                    <div class="card package-card muted p-4">
+                        <h3>Pro Account</h3>
+                        <i class="fas fa-social"></i>
+                        <p class="package-cost"><span>£</span>14.99</p>
+                        <span class="small-text">per month</span>
+                        <hr>
+                        <ul class="package-feature-list">
+                            <li><i class="fas fa-check"></i>
+                                <span>All Everyday tier features</span>
+                            </li>
+                            <li><i class="fas fa-check"></i>
+                                <span>Register for 10 free events a month</span>
+                            </li>
+                        </ul>
+                        <div class="btn-wrap flex-column">
+                            <button type="submit" class="package-cta btn 
+                            {% if users_package == 3%}featured primary-btn
+                            {% else %} primary-btn-outline-color
+                            {% endif%}" onclick="select_package(3);">
+                                {% if users_package == 3%}
+                                Your Current Package
+                                {% elif users_package %}
+                                Upgrade to this Package
+                                {% else %}
+                                Select This Package
+                                {%endif%}
+                            </button>
+                            {% if sub_change == "downgrade" and users_package == 3 %}
+                            <p class="p-text-underline pt-3 m-auto">Pending Downgrade!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User must register before proceeding modal START -->
+    <div class="modal fade" id="must_register" tabindex="-1" role="dialog" aria-labelledby="must_register"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card muted m-0">
+                        <h3 class="header-underline">Register Now!</h3>
+                        <p>
+                            You'll need to create a free account before you can upgrade to a higher tier!
+                            <br><br> Once registered, you'll be able to take advantage of our Free Account features!
+                        </p>
+                        <hr>
+                        <div class="event-card-buttons d-flex">
+                            <a href="{% url 'account_signup' %}" class="btn secondary-btn large m-auto py-3 px-4 w-45">
+                                Register Now</a>
+                        </div>
+                        <p class="text-center mt-3">Already have an account? <a href="{% url 'account_login' %}">Login
+                                here</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- User must register before proceeding modal END -->
+
+</section>
+
+{{ account_required|json_script:"id_account_required" }}
+<script src="{% static 'packages/js/packages.js' %}" type="text/javascript"></script>
+{% endblock %}

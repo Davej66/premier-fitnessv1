@@ -1,0 +1,183 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block post_CSS %}
+<link rel="stylesheet" href="{% static 'users/css/users.css' %}">
+{% endblock %}
+
+{% block head_title %}Edit Profile{% endblock %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="message-wrap">
+    <div class="message">
+        <span>{{message}}</span><i class="fas fa-times" onclick="removeMessage(this);"></i>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="container-fluid w-100 m-0 p-0 light-page">
+    <div class="row w-100 m-0">
+        <div class="d-flex justify-content p-0 relative">
+            <!-- SIDENAV -->
+            {% include "navbar/sidenav.html" %}
+
+            <!-- MAIN PAGE CONTENT -->
+            <div class="container nav-top-padding">
+                <section class="py-5 section-with-padding">
+                    <!-- MAIN BODY CARD -->
+                    <div class="container w-100 d-flex flex-row justify-content-center align-items-stretch centered-col-large-page">
+                        <div class="d-flex justify-content-between row w-100">
+
+                            <div class="container-box-header pb-4">
+                                <h1 class="header-underline-after">Edit Profile</h1>
+                            </div>
+
+                            <!-- Begin user profile edit form -->
+                            <form action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <!-- First card section -->
+                                <div class="card muted mb-3 p-5 z-2">
+                                    <h3 class="edit-profile-section-header mb-5">The Basics</h3>
+                                    <div class="d-flex row flex-wrap">
+                                        <div class="d-flex flex-column px-0" id="edit_prf_img_col">
+                                            <div class="edit-prf-pic-img-wrap prf-img-preview-wrapper m-auto">
+                                                <img class="prf-img-preview fade-in" src="{{profile_image}}"
+                                                    alt="{{this_user.first_name}} {{this_user.last_name}}'s profile image"
+                                                    onload="specImageOrientation(this);">
+                                                <div class="overlay-edit-trigger" onclick="prfImgUpload();">
+                                                    <i class="fas fa-camera"></i>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn secondary-btn my-4 mx-auto"
+                                                onclick="prfImgUpload();">Replace Photo</button>
+                                            <input class="d-none" type="file" accept="image/*" id="profile_image"
+                                                name="profile_image">
+                                        </div>
+
+                                        <div class="d-flex flex-column px-0" id="edit_prf_basics_col">
+                                            <div class="input-row d-flex justify-content-between">
+                                                <div class="fieldset">
+                                                    <label for="first_name">First Name</label>
+                                                    <input type="text" id="first_name" name="first_name"
+                                                        value="{{this_user.first_name}}" autofocus required>
+                                                </div>
+
+                                                <div class="fieldset">
+                                                    <label for="last_name">Last Name</label>
+                                                    <input type="text" id="last_name" name="last_name"
+                                                        value="{{this_user.last_name}}" required>
+                                                </div>
+                                            </div>
+                                            <div class="input-row d-flex justify-content-between">
+                                                <div class="fieldset industry">
+                                                    <label for="industry">Industry</label>
+                                                    <div id="ind_select_profile_edit" class="no-outline-on-focus ind_field_required"
+                                                        tabindex="0"></div>
+                                                </div>
+                                                <div class="fieldset">
+                                                    <label for="job_role">Role</label>
+                                                    <div id="role_select_profile_edit" class="no-outline-on-focus">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="input-row d-flex justify-content-between">
+                                                <div class="fieldset">
+                                                    <label for="location">Location</label>
+                                                    <input type="text" id="location" name="location"
+                                                        value="{{this_user.location|default:''}}"
+                                                        placeholder="Enter your city" required>
+                                                </div>
+                                            </div>
+                                            <div class="fieldset">
+                                                <label for="skills" class="mb-1">Skills</label>
+                                                <div id="skills_display" class="skills-display-wrapper">
+                                                    <!-- Skills wills append here using JS -->
+                                                    <input type="hidden" id="profile_completed" name="profile_completed"
+                                                    value="True">
+                                                    <div class="skills-wrapper d-flex flex-column">
+                                                        <button type="button" class="btn primary-btn"
+                                                            onclick="addSkill(this);"><i class="fas fa-plus"></i> Add
+                                                            Skill</button>
+                                                    </div>
+                                                    <div id="skills-select">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="fieldset textarea m-0">
+                                        <label for="location">About me</label>
+                                        <textarea id="description" class="no-padding-on-focus" name="description"
+                                            onfocus="resizeTextarea(this);" oninput="resizeTextarea(this);"
+                                            placeholder="Tell other users a little about yourself">{{this_user.description|default:''}}</textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Second card section -->
+                                <div class="card muted mb-3 p-5">
+                                    <h3 class="edit-profile-section-header mb-5">Your Account</h3>
+                                    <div class="d-flex row flex-wrap">
+                                        <div class="d-flex flex-column px-0" id="edit_prf_basics_col">
+                                            <div class="input-row d-flex justify-content-between">
+                                                <div class="fieldset">
+                                                    <label for="email">Email</label>
+                                                    <input type="text" id="email" name="email"
+                                                        value="{{this_user.email}}">
+                                                </div>
+
+                                                <div class="fieldset">
+                                                    <label class="form-check-label">Hide my profile from other
+                                                        users?</label>
+                                                    <div class="form-switch">
+                                                        <span>Hide me</span>
+                                                        {% if this_user.show_profile is True %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="show_profile" name="show_profile" checked>
+                                                        {% else %}
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="show_profile" name="show_profile">
+                                                        {% endif %}
+                                                        <span>Show me to others</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="send-form-buttons d-flex m-auto">
+                                    <div class="form-submit-verify">
+                                        <p class="p-text-underline">Saving will overwrite your previous information...
+                                        </p>
+                                    </div>
+                                    <button class="btn primary-btn large" type="button" onclick="verifyForm(this);">Save
+                                        Changes</button>
+                                </div>
+                            </form>
+                            <!-- End user profile edit form -->
+
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Page only scripts -->
+{{ skills|json_script:"all_skills" }}
+{{ user_skills|json_script:"user_skills" }}
+{{ user_ind|json_script:"user_ind" }}
+{{ all_roles|json_script:"all_roles" }}
+{{ user_role|json_script:"user_role" }}
+{{ free_account|json_script:"free_account" }}
+{{ this_user.profile_completed|json_script:"profile_complete" }}
+<script src="{% static 'users/js/users.js' %}" type="text/javascript"></script>
+<script src="{% static 'users/js/options_multiselect.js' %}" type="text/javascript"></script>
+
+{% endblock %}
